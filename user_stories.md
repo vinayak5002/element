@@ -1,4 +1,6 @@
-EPIC - Login
+# User stories and T.T
+
+## EPIC - Login
  - As a user, I want to be able to log in with my email address and password, so that I can access my account and the system's features.
  	- Check if the email id exist in the database
  	- Check if the password give matched with the password for that email id in the database
@@ -11,7 +13,7 @@ EPIC - Login
  - As a user, I want to be able to log out of the system when I am finished using it, so that I can protect my account and the system from unauthorized access.
  	- Once the session is over, user must be logged out. This is to provide security against accidental forgetting to log out
 
-EPIC - Elective selection
+## EPIC - Elective selection
  - As a student, I should be able to see the complete details of the electives being offered including the details course handling faculty
  	- A brief summary about the course like credits, evaluation patters, handling faculty must be provided in a easily readable way 
  - As a student, I should be able to see the electives offered and filter them using different categories
@@ -22,7 +24,7 @@ EPIC - Elective selection
  - As a student, I should be able to see how many seats a elective has to offer, to help in taking decision
  	- While displaying the list of electives a student can choose from, a maximum capacity limit of seats available for that course also should be visible
  
-EPIC - Visualization
+## EPIC - Visualization
  - As a student, I should be able to see electives which i should take to pursue a particular career-path
  	- User must be shown the list of all domain from which the courses are being offered
  	- For each domain, all the courses with their corresponding prerequisites must be shown
@@ -35,7 +37,7 @@ EPIC - Visualization
  - As a admin, I have to be able to see how many seats are vacant after the allocation.
  	- Find how many students were offered that course and take the difference from the max capacity of seats in that course
 
-EPIC - Management
+## EPIC - Management
  - As an admin, I want to be able to add new elective courses or remove unpopular electives.	
  	- Notify the admin if there is a elective which no one takes for many year so that university can make a decision on it
  - As a admin, I should be able to keep the electives updated with the revision of the curriculum
@@ -45,7 +47,7 @@ EPIC - Management
  - As a admin, I should be able to start and finish the allocation and change of elective process
  	- The elective allocation process algorithm should start and the change of elective queries must be notified to admin
 
-EPIC - Elective Change
+## EPIC - Elective Change
  - As a student, I want to be able to request a change of elective course.
  	- A student can wish to change the elective and send a request to the admin within the deadline set by admin
  - As a student, I want to be able to view the seats elective courses available so that I can make an informed decision.
