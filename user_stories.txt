@@ -1,0 +1,57 @@
+EPIC - Login
+ - As a user, I want to be able to log in with my email address and password, so that I can access my account and the system's features.
+ 	- Check if the email id exist in the database
+ 	- Check if the password give matched with the password for that email id in the database
+ - As a user, I want to be able to reset my password if I forget it, so that I can regain access to my account.
+ 	- Send an email to the student's personal email id a temporary link to that mail which can reset the passwords
+ 	- After resetting the passwords update it in the database
+ - As an admin, I want to be able to view and manage user accounts, so that I can ensure the security and integrity of the system.
+ 	- Get the data of the newly joined students and add it into database and email a strong password generated to the student
+ 	- A password resetting link should also be sent so that the student can update the password as he likes
+ - As a user, I want to be able to log out of the system when I am finished using it, so that I can protect my account and the system from unauthorized access.
+ 	- Once the session is over, user must be logged out. This is to provide security against accidental forgetting to log out
+
+EPIC - Elective selection
+ - As a student, I should be able to see the complete details of the electives being offered including the details course handling faculty
+ 	- A brief summary about the course like credits, evaluation patters, handling faculty must be provided in a easily readable way 
+ - As a student, I should be able to see the electives offered and filter them using different categories
+ 	- Filters should be applicable on to the list of electives a students can choose from. Filters like credits, lab courses, theory courses, project-based courses
+ 	- Credits filter should be able to show only the courses withing the range given by the user
+ 	- Type of course filter should be able to show only lab, theory, project-based courses by the choice of student
+ - As a student, I want to be able to prioritize my elective choices, so that I have a higher chance of getting into the electives that I want the most.
+ - As a student, I should be able to see how many seats a elective has to offer, to help in taking decision
+ 	- While displaying the list of electives a student can choose from, a maximum capacity limit of seats available for that course also should be visible
+ 
+EPIC - Visualization
+ - As a student, I should be able to see electives which i should take to pursue a particular career-path
+ 	- User must be shown the list of all domain from which the courses are being offered
+ 	- For each domain, all the courses with their corresponding prerequisites must be shown
+ - As a student, I should be able to see the popularity and the ratings of the courses to help making decision
+ 	- Popularity is percentage of students who took the course from all the students who could take that course which can help in decision making
+ 	- Also a easy, medium, hard tags can be added to the courses which can help in decision making
+ - As a student, I should be able to see what electives will be unlocked to me if i complete an elective
+ 	- A list of courses who's prerequisite will be satisfied if the student completes the course successfully
+	- Another list can be shown which will be courses student can take he they complete the course in the previous list also
+ - As a admin, I have to be able to see how many seats are vacant after the allocation.
+ 	- Find how many students were offered that course and take the difference from the max capacity of seats in that course
+
+EPIC - Management
+ - As an admin, I want to be able to add new elective courses or remove unpopular electives.	
+ 	- Notify the admin if there is a elective which no one takes for many year so that university can make a decision on it
+ - As a admin, I should be able to keep the electives updated with the revision of the curriculum
+ 	- After every revision to the curriculum, the database should be updated accordingly
+ - As a admin, I should be able to notify students when the process of allocation / change of elective starts and end
+ 	- An email should be sent to all the students informing about the schedules of allocation / change of electives deadlines
+ - As a admin, I should be able to start and finish the allocation and change of elective process
+ 	- The elective allocation process algorithm should start and the change of elective queries must be notified to admin
+
+EPIC - Elective Change
+ - As a student, I want to be able to request a change of elective course.
+ 	- A student can wish to change the elective and send a request to the admin within the deadline set by admin
+ - As a student, I want to be able to view the seats elective courses available so that I can make an informed decision.
+ 	- Number of seats vacant has to be calculated and shown to the student while opting to change electives
+ - As an admin, I want to be able to receive requests from students to change their elective courses so that I can review and approve them.
+ 	- All the requests from the students must be presented to the admin in a FCFS order with an option to allocate or reject
+ 	- Allocation will be done is there are seats still vacant after the allocation
+ - As a student, I want to be able to track the progress of my request to change my elective.
+ 	- User must be shown the status "pending" if the request is still in queue, "rejected" if the request couldn't be fulfilled
