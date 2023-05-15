@@ -28,6 +28,7 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/styles', express.static('static/styles'));
+app.use('/scripts', express.static('static/scripts'));
 
 app.get('/', (req, res) => {
   res.send("Yokoso");
@@ -84,6 +85,13 @@ app.post('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) throw err;
     res.redirect("/login");
+  });
+})
+
+app.get('/destroySession', (req, res) => {
+  req.session.destroy((err) => {
+    console.log("Destroying the session");
+    if (err) throw err;
   });
 })
 
