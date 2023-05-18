@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+dotenv.config({ path: './.env' });
 
 // Replace the connection string with your own
-const connectionString = 'mongodb+srv://vizz:vizzard@cluster0.jni7dnx.mongodb.net/element?retryWrites=true&w=majority';
+const connectionString = process.env.CONNECTION_STRING;
 
 mongoose.connect(connectionString, {
   useNewUrlParser: true,
