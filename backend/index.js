@@ -50,15 +50,6 @@ app.get('/login', (req, res) => {
   res.sendFile(__dirname + '/static/login.html');
 });
 
-app.get('/dashboard', (req, res) => {
-  if (req.session.isAuth) {
-    console.log("Serving dashboard name = " + req.session.student_email);
-    res.render('dashboard.ejs', { name: req.session.student_email });
-  } else {
-    res.redirect('/login');
-  }
-});
-
 app.post('/login', async (req, res) => {
   console.log(req.body);
   const { email, password } = req.body;
@@ -72,13 +63,13 @@ app.post('/login', async (req, res) => {
 
   console.log(user);
   console.log(user.password);
-  console.log(user.name);
+  console.log(user.username);
   console.log(user.email);
   console.log(user.sem);
 
   if (user.password === password) {
     req.session.isAuth = true;
-    req.session.student_name = user.name;
+    req.session.student_name = user.username;
     req.session.student_email = user.email;
     req.session.student_sem = user.sem;
     res.redirect('/dashboard');
@@ -190,6 +181,15 @@ app.get('/destroySession', (req, res) => {
     console.log("Destroying the session");
     if (err) throw err;
   });
+});
+
+app.get('/dashboard', (req, res) => {
+  if (req.session.isAuth) {
+    console.log("Serving dashboard name = " + req.session.student_name);
+    res.render('dashboard.ejs', { name: req.session.student_name });
+  } else {
+    res.redirect('/login');
+  }
 });
 
 app.listen(PORT, () => {
