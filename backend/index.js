@@ -41,24 +41,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/styles', express.static('static/styles'));
 app.use('/scripts', express.static('static/scripts'));
+app.use('/images', express.static('static/images'))
 
 app.get('/', (req, res) => {
   res.send("Yokoso");
 });
 
 app.get('/login', (req, res) => {
-  res.sendFile(__dirname + '/static/login.html');
+  res.render('login.ejs', { isWarned: false, warnignMessage: "none" });
 });
 
 app.post('/login', async (req, res) => {
   console.log(req.body);
-  const { email, password } = req.body;
+  const { email, password, selectedLogo } = req.body;
 
   const user = await StudentModel.findOne({ email });
 
   if (!user) {
     console.log("User not found!!");
-    return res.redirect('/login');
+    return res.render('login.ejs', { isWarned: true, warnignMessage: "User account not found" });
   }
 
   console.log(user);
@@ -75,14 +76,14 @@ app.post('/login', async (req, res) => {
     res.redirect('/dashboard');
   } else {
     console.log("Passwords don't match");
-    return res.redirect('/login');
+    return res.render('login.ejs', { isWarned: true, warnignMessage: "Wrong password" });
   }
 });
 
 app.post('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) throw err;
-    res.redirect("/login");
+    res.render('login.ejs', { isWarned: false, warnignMessage: "none" });
   });
 });
 
@@ -130,7 +131,7 @@ app.post('/forgotPassword', async (req, res) => {
     }
   });
 
-  res.redirect('/login');
+  res.render('login.ejs', { isWarned: true, warnignMessage: "Try loging in again after resetting password" });
 });
 
 app.get('/resetPassword', async (req, res) => {
@@ -166,7 +167,7 @@ app.post('/resetPassword', async (req, res) => {
         console.log("deleted tokens");
       }
 
-      res.redirect('/login');
+      res.render('login.ejs', { isWarned: true, warnignMessage: "Login with new password" });
     } else {
       res.send("Password updation failed");
     }
@@ -188,7 +189,7 @@ app.get('/dashboard', (req, res) => {
     console.log("Serving dashboard name = " + req.session.student_name);
     res.render('dashboard.ejs', { name: req.session.student_name });
   } else {
-    res.redirect('/login');
+    res.redirect("/login");
   }
 });
 
