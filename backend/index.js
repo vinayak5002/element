@@ -122,7 +122,7 @@ app.post('/forgotPassword', async (req, res) => {
     console.error(e);
   }
 
-  const link = 'https://localhost:5002/resetPassword?email=' + email + '&token=' + str;
+  const link = 'http://localhost:5002/resetPassword?email=' + email + '&token=' + str;
   
   var mailOptions = {
     from: 'mailvizzard@gmail.com',
@@ -142,9 +142,48 @@ app.post('/forgotPassword', async (req, res) => {
   res.redirect('/login');
 });
 
-app.port('/resetPassword', (req, res) => {
-  const { email, token } = req.body;
-})
+app.get('/resetPassword', async (req, res) => {
+  // const { email, token } = req.query;
+  const email = req.query.email;
+  const token = req.query.token;
+
+  const result = await PswdToken.findOne({ token: token });
+
+  if (result) {
+    res.sendFile(__dirname + '/static/resetPassword.html');
+  }
+  else {
+    res.send("Something wrong occurred");
+  }
+  // res.send("wtf is this?");
+});
+
+app.post('/resetPassword', async (req, res) => {
+  const { email, password } = req.body;
+
+  console.log(email);
+  console.log(password);
+
+  try {
+    const result = await StudentModel.updateOne({ email: email }, { password: password });
+
+    if (result.modifiedCount === 1) {
+
+      const deleteToken = await PswdToken.deleteMany({ email: email });
+
+      if(deleteToken){
+        console.log("deleted tokens");
+      }
+
+      res.redirect('/login');
+    } else {
+      res.send("Password updation failed");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 app.get('/destroySession', (req, res) => {
   req.session.destroy((err) => {
@@ -155,4 +194,4 @@ app.get('/destroySession', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
-});
+}); 
