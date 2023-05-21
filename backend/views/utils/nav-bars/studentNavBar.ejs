@@ -1,0 +1,21 @@
+<header class="head-area">
+    <div class="header-container">
+        <div class="logo">
+            <h1 style="margin: 0;"><span>Ele</span>Ment</h1>
+            <span style="font-size: 10px;">STUDENT</span>
+        </div>
+        <div class="mobile-nav">
+            <i class="fas fa-bars"></i>
+        </div>
+        <ul class="menu1" style="margin: 0 0; padding: 0;">
+            <li><a href="#" class="<% if( active == 'home'){%>active<%} else {%> <%}%>">Home</a></li>
+            <li><a href="#" class="<% if( active == 'view-student'){%>active<%} else {%> <%}%>">View Student</a></li>
+            <li><a href="#" class="<% if( active == 'add-student'){%>active<%} else {%> <%}%>">Add Student</a></li>
+            <li><a href="#" class="<% if( active == 'blog'){%>active<%} else {%> <%}%>">Blog</a></li>
+            <li><a href="#" class="<% if( active == 'services'){%>active<%} else {%> <%}%>">Services</a></li>
+            <li>
+                <form action="/logout" method="POST"><button id="logout-btn">LogOut</button></form>
+            </li>
+        </ul>
+    </div>
+</header>

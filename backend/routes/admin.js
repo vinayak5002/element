@@ -1,39 +1,86 @@
-const express = require('express');
-const session = require('express-session');
-const dotenv = require('dotenv');
-const db = require('../db');
-const MongoDBSession = require('connect-mongodb-session')(session);
+const express = require("express");
+const session = require("express-session");
+const dotenv = require("dotenv");
+const db = require("../db");
+const MongoDBSession = require("connect-mongodb-session")(session);
 
-dotenv.config({path: '../.env'});
+dotenv.config({ path: "../.env" });
 
 let router = express.Router();
 
-const StudentModel = require('../models/student');
-const PswdToken = require('../models/pswdToken');
-const AdminModel = require('../models/admin');
+const StudentModel = require("../models/student");
+const PswdToken = require("../models/pswdToken");
+const AdminModel = require("../models/admin");
 
 const store = new MongoDBSession({
-    uri: process.env.CONNECTION_STRING,
-    collection: 'session'
+  uri: process.env.CONNECTION_STRING,
+  collection: "session",
 });
 
-router.use(session({
-  secret: 'my secret',
-  resave: false,
-  saveUninitialized: false,
-  store: store
-}));
+router.use(
+  session({
+    secret: "my secret",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
+);
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
-router.use('/styles', express.static('static/styles'));
-router.use('/scripts', express.static('static/scripts'));
-router.use('/images', express.static('static/images'));
+router.use("/styles", express.static("static/styles"));
+router.use("/scripts", express.static("static/scripts"));
+router.use("/images", express.static("static/images"));
 
 router.get("/", (req, res) => {
-    res.send("Admin");
+  res.send("Admin");
 });
 
+router.get("/dashboard", (req, res) => {
+  if (req.session.isAuth) {
+    console.log("Serving admin dashboard name = " + req.session.admin_name);
+    return res.render("adminDashboard.ejs", {});
+  } else {
+    res.redirect("/login");
+  }
+});
 
+router.post("/login", async (req, res) => {
+  console.log(req.body);
+  const { email, password, selectedLogo } = req.body;
+
+  const user = await AdminModel.findOne({ email });
+  const users = await AdminModel.find();
+  console.log(users);
+  console.log(user);
+
+  if (!user) {
+    console.log("User not found!!");
+    return res.render("login.ejs", {
+      isWarned: true,
+      warnignMessage: "User account not found",
+    });
+  }
+
+  if (user.password === password) {
+    req.session.isAuth = true;
+    req.session.admin_name = user.username;
+    req.session.admin_email = user.email;
+    res.redirect("/admin/dashboard");
+  } else {
+    console.log("Passwords don't match");
+    return res.render("login.ejs", {
+      isWarned: true,
+      warnignMessage: "Wrong password",
+    });
+  }
+});
+
+router.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) throw err;
+    res.render("login.ejs", { isWarned: false, warnignMessage: "none" });
+  });
+});
 
 module.exports = router;
