@@ -5,11 +5,13 @@ var nodemailer = require('nodemailer');
 const db = require('./db');
 const MongoDBSession = require('connect-mongodb-session')(session);
 
+
 dotenv.config({ path: './.env' });
 
 const app = express();
 const StudentModel = require('./models/student');
 const PswdToken = require('./models/pswdToken');
+const AdminModel = require('./models/admin');
 
 const store = new MongoDBSession({
   uri: process.env.CONNECTION_STRING,
@@ -27,6 +29,10 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+const adminRouter = require('./routes/admin');
+
+app.use("/admin", adminRouter);
+
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
 
@@ -41,7 +47,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/styles', express.static('static/styles'));
 app.use('/scripts', express.static('static/scripts'));
-app.use('/images', express.static('static/images'))
+app.use('/images', express.static('static/images'));
 
 app.get('/', (req, res) => {
   res.send("Yokoso");
