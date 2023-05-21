@@ -11,6 +11,7 @@ let router = express.Router();
 const StudentModel = require("../models/student");
 const PswdToken = require("../models/pswdToken");
 const AdminModel = require("../models/admin");
+const announcementModel = require("../models/announcement");
 
 const store = new MongoDBSession({
   uri: process.env.CONNECTION_STRING,
@@ -36,13 +37,22 @@ router.get("/", (req, res) => {
   res.send("Admin");
 });
 
-router.get("/dashboard", (req, res) => {
+router.get("/dashboard", async (req, res) => {
   if (req.session.isAuth) {
     console.log("Serving admin dashboard name = " + req.session.admin_name);
-    return res.render("adminDashboard.ejs", {});
+    const announcements = await announcementModel.find();
+    console.log(announcements[0].announcement);
+    return res.render("adminDashboard.ejs", {announcements: announcements.reverse()});
   } else {
     res.redirect("/login");
   }
+});
+
+router.post("/makeAnnouncement", (req, res) => {
+  const { announcement } = req.body;
+  const newAnnouncement = new announcementModel({ announcement });
+  newAnnouncement.save();
+  res.redirect("/admin/dashboard");
 });
 
 router.post("/login", async (req, res) => {
