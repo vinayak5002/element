@@ -58,6 +58,9 @@
                 <h4>Open Registrations</h4>
                 <div class="list-content">
                     <ul class="list-group">
+                        <% for (let i=0; i < regis.length; i++) { %>
+                                <%- include('./utils/regisTile.ejs', { dept: regis[i].dept, sem: regis[i].sem, startDate: regis[i].startDate, endDate: regis[i].endDate }) %>
+                        <% } %>
                         <li class="list-group-item list-item">
                             <p>Department: <span class="badge alert-info">CSE</span>
                                 Semester: <span class="badge alert-success">IV</span><br>

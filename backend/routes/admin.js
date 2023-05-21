@@ -12,6 +12,7 @@ const StudentModel = require("../models/student");
 const PswdToken = require("../models/pswdToken");
 const AdminModel = require("../models/admin");
 const announcementModel = require("../models/announcement");
+const openRegistrationModel = require("../models/openRegistrations");
 
 const store = new MongoDBSession({
   uri: process.env.CONNECTION_STRING,
@@ -42,7 +43,26 @@ router.get("/dashboard", async (req, res) => {
     console.log("Serving admin dashboard name = " + req.session.admin_name);
     const announcements = await announcementModel.find();
     console.log(announcements[0].announcement);
-    return res.render("adminDashboard.ejs", {announcements: announcements.reverse()});
+
+    var regis = await openRegistrationModel.find();
+    var modifiedObjects = [];
+    regis.forEach((obj) => {
+      var modifiedObj = {
+        _id: obj._id,
+        dept: obj.dept,
+        sem: obj.sem,
+        startDate: obj.startDate.toDateString().slice(4),
+        endDate: obj.endDate.toDateString().slice(4),
+      };
+
+      modifiedObjects.push(modifiedObj);
+    });
+    console.log(modifiedObjects);
+
+    return res.render("adminDashboard.ejs", {
+      announcements: announcements.reverse(),
+      regis: modifiedObjects
+    });
   } else {
     res.redirect("/login");
   }

@@ -12,6 +12,7 @@ const app = express();
 const StudentModel = require('./models/student');
 const PswdToken = require('./models/pswdToken');
 const AdminModel = require('./models/admin');
+const openRegistrationModel = require('./models/openRegistrations');
 
 const store = new MongoDBSession({
   uri: process.env.CONNECTION_STRING,
