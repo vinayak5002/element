@@ -54,6 +54,10 @@ app.get('/', (req, res) => {
   res.send("Yokoso");
 });
 
+app.get('/testing', (req, res) => {
+  res.render('selectElective.ejs');
+});
+
 app.get('/login', (req, res) => {
   res.render('login.ejs', { isWarned: false, warnignMessage: "none" });
 });
