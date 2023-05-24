@@ -27,8 +27,8 @@
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
-
+    <script src="https://unpkg.com/mustache@latest"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -64,19 +64,19 @@
                         <div class="checkboxes">
                             <label>
                                 <div class="check-box">
-                                    <input class="form-check-input" type="checkbox" value="" id="type-lab">
+                                    <input class="form-check-input" type="checkbox" value="" id="type-lab" checked>
                                     <div class="check-desc">Lab</div>
                                 </div>
                             </label>
                             <label>
                                 <div class="check-box">
-                                    <input class="form-check-input" type="checkbox" value="" id="type-project">
+                                    <input class="form-check-input" type="checkbox" value="" id="type-project" checked>
                                     <div class="check-desc">Project</div>
                                 </div>
                             </label>
                             <label>
                                 <div class="check-box">
-                                    <input class="form-check-input" type="checkbox" value="" id="type-theory">
+                                    <input class="form-check-input" type="checkbox" value="" id="type-theory" checked>
                                     <div class="check-desc">Theory</div>
                                 </div>
                             </label>
@@ -89,25 +89,25 @@
                         <div class="checkboxes">
                             <label>
                                 <div class="check-box">
-                                    <input class="form-check-input" type="checkbox" value="" id="cr-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="cr-1" checked>
                                     <div class="check-desc">1</div>
                                 </div>
                             </label>
                             <label>
                                 <div class="check-box">
-                                    <input class="form-check-input" type="checkbox" value="" id="cr-2">
+                                    <input class="form-check-input" type="checkbox" value="" id="cr-2" checked>
                                     <div class="check-desc">2</div>
                                 </div>
                             </label>
                             <label>
                                 <div class="check-box">
-                                    <input class="form-check-input" type="checkbox" value="" id="cr-3">
+                                    <input class="form-check-input" type="checkbox" value="" id="cr-3" checked>
                                     <div class="check-desc">3</div>
                                 </div>
                             </label>
                             <label>
                                 <div class="check-box">
-                                    <input class="form-check-input" type="checkbox" value="" id="cr-4">
+                                    <input class="form-check-input" type="checkbox" value="" id="cr-4" checked>
                                     <div class="check-desc">4</div>
                                 </div>
                             </label>
@@ -276,6 +276,49 @@
         </div>
     </div>
 
+    <script id="electiveTile" type="text/x-handlebars-template">
+        <div class="card m-b-15px">
+            <div class="card-header myCard">
+                <div class="main-tile-flex">
+                    <div class="tile-con-flex">
+                        <input class="form-check-input" style="margin: 0; margin-right: 20px;" type="checkbox" value=""
+                            id="{{ courseCode }}">
+                        <p class="m-0">{{ courseCode }}:</p>
+                    </div>
+                    <div class="empty" id="headingOne" data-toggle="collapse" data-target="#{{ target }}" aria-expanded="false"
+                        aria-controls="{{ target }}">{{ courseName }}</div>
+                    <button class="btn bg-red collapsed" type="button" data-toggle="collapse" data-target="#{{ target }}"
+                        aria-expanded="false" aria-controls="{{ target }}">
+                        <i class="fa fa-angle-down"></i>
+                </div>
+            </div>
+            <div id="{{ target }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="hidden-content card-body">
+                    <div class="hidden-content-row-1">
+                        <p class="m-0"> <span class="badge alert-info">{{ courseType }}-Based Course</span></p>
+                        <p class="m-0">Credits: <span class="badge alert-danger">{{ courseCredits }}</span></p>
+                    </div>
+                    <h5 class="bold">Overview:</h5>
+                    <p class="small">
+                        {{ courseOverview }}
+                    </p>
+                    <h5 class="bold">Pre-Requisites:</h5>
+                    <p>
+                      {{#coursePreRequisites}}
+                        {{.}}{{#isLast}}{{else}}, {{/isLast}}
+                      {{/coursePreRequisites}}
+                    </p>
+                    <h5 class="bold">Course outcomes:</h5>
+                    <ul class="small m-5pr">
+                      {{#courseOutcomes}}
+                        <li>{{.}}</li>
+                      {{/courseOutcomes}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </script>
+
     <script>
         $(document).ready(function () {
             $(".mobile-nav i").click(function () {
@@ -283,53 +326,9 @@
             });
         })
 
-        function getTile() {
-            return `<div class="card m-b-15px">
-    <div class="card-header myCard">
-        <div class="main-tile-flex">
-            <div class="tile-con-flex">
-                <input class="form-check-input" style="margin: 0; margin-right: 20px;" type="checkbox" value=""
-                    id="{{ course.courseCode }}">
-                <p class="m-0">{{ course.courseCode }}:</p>
-            </div>
-            <div class="empty" id="headingOne" data-toggle="collapse" data-target="#{{ target }}" aria-expanded="false"
-                aria-controls="{{ target }}">{{ course.courseName }}</div>
-            <button class="btn bg-red collapsed" type="button" data-toggle="collapse" data-target="#{{ target }}"
-                aria-expanded="false" aria-controls="{{ target }}">
-                <i class="fa fa-angle-down"></i>
-        </div>
-    </div>
-    <div id="{{ target }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-        <div class="hidden-content card-body">
-            <div class="hidden-content-row-1">
-                <p class="m-0"> <span class="badge alert-info">{{ course.courseType }}-Based Course</span></p>
-                <p class="m-0">Credits: <span class="badge alert-danger">{{ course.courseCredits }}</span></p>
-            </div>
-            <h5 class="bold">Overview:</h5>
-            <p class="small">
-                {{ course.courseOverview }}
-            </p>
-        </div>
-    </div>
-</div>`;
-
-// Deleted code
-// <h5 class="bold">Pre-Requisites:</h5>
-//             <p>
-//                 {{ for (let i = 0; i < course.coursePreRequisites.length; i++) { }}
-//                     {{ course.coursePreRequisites[i] }}{{ i !== course.coursePreRequisites.length - 1 ? ', ' : '' }}
-//                 {{ } }}
-//             </p>
-//             <h5 class="bold">Course outcomes:</h5>
-//             <ul class="small m-5pr">
-//                 {{ for (let i = 0; i < course.courseOutcomes.length; i++) { }}
-//                     <li>{{ course.courseOutcomes[i] }}</li>
-//                 {{ } }}
-//             </ul>
-
-        }
         const filterButton = document.getElementById('filterButton');
         filterButton.addEventListener('click', filter);
+        filter();
 
         function filter() {
             const courses = [
@@ -339,7 +338,7 @@
                     courseType: 'Theory',
                     courseCredits: 2,
                     courseOverview: 'This course provides an introduction to the fundamentals of computer science...',
-                    coursePreRequisites: ['MAT101'],
+                    coursePreRequisites: ['MAT101', 'MAT102'],
                     courseOutcomes: ['CO1: Understand basic programming concepts', 'CO2: Apply problem-solving skills in programming'],
                 },
                 {
@@ -385,23 +384,21 @@
                 "Theory": theory
             };
 
-            const target = 'c';
-
             function satisfies(type, credits) {
                 return typeLists[type] && creditsList[credits - 1];
             }
 
             const targetElement = document.getElementById('accordionExample');
-            targetElement.innerHTML = ''; // Clear previous content
-
-            const templateSource = getTile();
-            const template = Handlebars.compile(templateSource);
+            targetElement.innerHTML = '';
 
             for (let i = 0; i < courses.length; i++) {
                 const course = courses[i];
                 if (satisfies(course.courseType, course.courseCredits)) {
-                    const html = template({ course: course, target: target+(i-1).toString() });
-                    targetElement.innerHTML += html;
+                    var data = course;
+                    data["target"] = "c"+(i+1).toString();
+                    var template = $('#electiveTile').html();
+                    var result = Mustache.render(template, data);
+                    targetElement.innerHTML += result;
                 }
             }
         }
