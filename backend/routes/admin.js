@@ -35,7 +35,7 @@ router.use("/scripts", express.static("static/scripts"));
 router.use("/images", express.static("static/images"));
 
 router.get("/", (req, res) => {
-  res.send("Admin");
+  res.send("Yokoso, Admin ye");
 });
 
 router.get("/dashboard", async (req, res) => {

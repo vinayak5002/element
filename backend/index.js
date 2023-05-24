@@ -31,8 +31,10 @@ const transporter = nodemailer.createTransport({
 });
 
 const adminRouter = require('./routes/admin');
+const studentRouter = require('./routes/student');
 
 app.use("/admin", adminRouter);
+app.use("/student", studentRouter);
 
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
@@ -84,7 +86,8 @@ app.post('/login', async (req, res) => {
     req.session.student_name = user.username;
     req.session.student_email = user.email;
     req.session.student_sem = user.sem;
-    res.redirect('/dashboard');
+    req.session.student_dept = user.dept;
+    res.redirect('/student/dashboard');
   } else {
     console.log("Passwords don't match");
     return res.render('login.ejs', { isWarned: true, warnignMessage: "Wrong password" });

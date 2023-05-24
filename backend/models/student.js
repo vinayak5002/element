@@ -20,6 +20,9 @@ const userSchema = new Schema({
   sem: {
     type: Number,
     required: true,
+  },
+  dept: {
+    type: String
   }
 });
 
