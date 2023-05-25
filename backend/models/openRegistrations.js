@@ -10,6 +10,9 @@ const openRegistration = new Schema({
         type: Number,
         required: true,
     },
+    numElectives: {
+        type: Number,
+    },
     startDate: {
         type: Date,
         required: true,

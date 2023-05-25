@@ -91,13 +91,16 @@ nav ul li a:hover {
     background-color: #333;
     color: #fff;
 }
-#nav-toggle:checked + nav {
+
+#nav-toggle:checked+nav {
     display: block;
 }
-#nav-toggle:checked ~ header,
-#nav-toggle:checked ~ footer {
+
+#nav-toggle:checked~header,
+#nav-toggle:checked~footer {
     background-color: #666;
 }
+
 /* Style for the button */
 #nav-toggle {
     position: fixed;
@@ -116,6 +119,57 @@ nav.show-menu {
 }
 
 /* Other styles remain the same */
-/* ... */
+.con-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+}
 
-/* Show/hide navigation
+.con-card {
+    margin: 12px 10px;
+    background-color: rgba(20, 36, 64, .7);
+    border-radius: 10px;
+    color: white;
+    font-weight: 300;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.card1 {
+    width: 35%;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 40vh;
+}
+
+.card2 {
+    width: 65%;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 75vh
+}
+
+
+#announcements {
+    width: 80%;
+    margin: auto;
+}
+
+.announce-tile {
+    background-color: rgba(255, 74, 68, .6);
+}
+
+.list-content {
+    width: 80%;
+    margin: auto;
+    color: black;
+}
+
+.dates {
+    width: 80%;
+    margin: auto;
+}
+
+.list-item {
+    text-align: start;
+}

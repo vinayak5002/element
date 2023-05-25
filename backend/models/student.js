@@ -23,6 +23,9 @@ const userSchema = new Schema({
   },
   dept: {
     type: String
+  },
+  coursesCompleted: {
+    type: [String]
   }
 });
 

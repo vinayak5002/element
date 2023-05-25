@@ -168,6 +168,7 @@ body {
   width: 50%;
   overflow: hidden;
   overflow-y: scroll;
+  position: relative;
 }
 
 .card1::-webkit-scrollbar {
@@ -176,6 +177,11 @@ body {
 
 .card2 {
   width: 50%;
+  position: relative;
+}
+
+.card2::-webkit-scrollbar {
+  display: none;
 }
 
 .main-tile-flex {
@@ -225,6 +231,9 @@ body {
 .m-0 {
   margin: 0px;
 }
+.m-r-5 {
+  margin-right: 5px;
+}
 
 .bold {
   font-weight: bold;
@@ -259,6 +268,25 @@ body {
   padding: 10px 15px;
 }
 
+.card1-content{
+  overflow-y: scroll;
+}
+
+.proceedBtn {
+  background-color: lightskyblue;
+  color: black;
+  margin: 10px;
+  margin-bottom: 10px;
+}
+
+.proceedPlacement {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  position: sticky; bottom: 0; right: 0;
+  margin: 10px 5px;
+}
+
 .filter-card {
   background-color: white;
   border-radius: 10px;
@@ -287,4 +315,38 @@ body {
 .check-desc {
   margin-top: 5px;
   font-weight: 500;
+}
+
+.not-prereq {
+  background-color: rgba(255, 74, 68, .6);
+  display: inline;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.card2-con {
+  margin: 0 20px;
+}
+
+.card2-con-flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.card2-title {
+  display: flex;
+  flex-direction: row;
+  color: black;
+}
+
+.submitPlacement {
+  position: absolute;
+  bottom: 10px;
+  right: 10px
+}
+
+.submitBtn {
+  background-color: lightskyblue;
+  color: black;
+  margin: 20px 20px;
 }
