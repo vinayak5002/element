@@ -23,6 +23,9 @@ const courseSchema = new Schema({
     courseOutcomes: {
         type: [String],
     },
+    seats: {
+        type: Number,
+    }
 });
 
 module.exports = mongoose.model("course", courseSchema);

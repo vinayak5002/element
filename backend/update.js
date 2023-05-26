@@ -53,8 +53,7 @@ app.use('/scripts', express.static('static/scripts'));
 app.use('/images', express.static('static/images'));
 
 app.get('/', (req, res) => {
-  // res.send("Yokoso");
-  res.redirect("/login");
+  res.send("Yokoso");
 });
 
 app.get('/testing', (req, res) => {
@@ -88,7 +87,6 @@ app.post('/login', async (req, res) => {
     req.session.student_email = user.email;
     req.session.student_sem = user.sem;
     req.session.student_dept = user.dept;
-    req.session.student_coursesCompleted = user.coursesCompleted;
     res.redirect('/student/dashboard');
   } else {
     console.log("Passwords don't match");
@@ -109,13 +107,6 @@ app.get('/forgotPassword', (req, res) => {
 
 app.post('/forgotPassword', async (req, res) => {
   const { email } = req.body;
-
-  const student = await StudentModel.findOne({ email: email });
-
-  if( !student ){
-    res.send("Email id not registered");
-    return;
-  }
   
   function generateString(length) {
     const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -175,6 +166,7 @@ app.post('/forgotPassword', async (req, res) => {
   });
 
   res.render('login.ejs', { isWarned: true, warnignMessage: "Try loging in again after resetting password" });
+
 });
 
 app.get('/resetPassword', async (req, res) => {
