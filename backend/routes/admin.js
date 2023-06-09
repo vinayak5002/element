@@ -59,13 +59,54 @@ router.get("/dashboard", async (req, res) => {
     });
     console.log(modifiedObjects);
 
-    return res.render("adminDashboard.ejs", {
+    return res.render("admin/adminDashboard.ejs", {
       announcements: announcements.reverse(),
       regis: modifiedObjects
     });
   } else {
     res.redirect("/login");
   }
+});
+
+router.get("/openRegistration", async (req, res) => {
+  if (req.session.isAuth) {
+    console.log("Serving Open registrations page");
+
+    var regis = await openRegistrationModel.find();
+    var modifiedObjects = [];
+    regis.forEach((obj) => {
+      var modifiedObj = {
+        _id: obj._id,
+        dept: obj.dept,
+        sem: obj.sem,
+        startDate: obj.startDate.toDateString().slice(4),
+        endDate: obj.endDate.toDateString().slice(4),
+      };
+
+      modifiedObjects.push(modifiedObj);
+    });
+    console.log(modifiedObjects);
+
+    return res.render("admin/openRegis.ejs", {
+      regis: modifiedObjects,
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+
+router.post("/openRegistration", async (req, res) => {
+  const { dept, sem, startDate, endDate, numElectives } = req.body;
+  const newRegis = new openRegistrationModel({
+    dept,
+    sem,
+    startDate,
+    endDate,
+    numElectives
+  });
+  newRegis.save();
+  console.log(newRegis);  
+  res.redirect("/admin/openRegistration");
 });
 
 router.post("/makeAnnouncement", (req, res) => {

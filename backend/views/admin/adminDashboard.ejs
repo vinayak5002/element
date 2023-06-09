@@ -2,7 +2,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Navigation bar</title>
+    <title>Dashboard</title>
 
     <link rel="stylesheet" href="styles/adminDashboard.css">
     <!-- Latest compiled and minified CSS -->
@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    <%- include('./utils/nav-bars/adminNavBar.ejs', { active: 'home' }) %>
+    <%- include('../utils/nav-bars/adminNavBar.ejs', { active: 'home' }) %>
 
         <div class="con-row">
             <div class="con-card card1">
@@ -38,7 +38,7 @@
                 <br>
                 <div id="announcements">
                     <% for (let i=0; i < announcements.length; i++) { %>
-                            <%- include('./utils/announcementTile.ejs', { text: announcements[i].announcement }) %>
+                            <%- include('../utils/announcementTile.ejs', { text: announcements[i].announcement }) %>
                     <% } %>
                     <div class="alert announce-tile" role="alert">
                         This is a danger alert—check it out!
@@ -59,43 +59,8 @@
                 <div class="list-content">
                     <ul class="list-group">
                         <% for (let i=0; i < regis.length; i++) { %>
-                                <%- include('./utils/regisTile.ejs', { dept: regis[i].dept, sem: regis[i].sem, startDate: regis[i].startDate, endDate: regis[i].endDate }) %>
+                                <%- include('../utils/regisTile.ejs', { dept: regis[i].dept, sem: regis[i].sem, startDate: regis[i].startDate, endDate: regis[i].endDate }) %>
                         <% } %>
-                        <li class="list-group-item list-item">
-                            <p>Department: <span class="badge alert-info">CSE</span>
-                                Semester: <span class="badge alert-success">IV</span><br>
-                                Open from <span class="badge alert-warning">25-jan-2023</span> - <span
-                                    class="badge alert-danger">30-may-2023</span>
-                            </p>
-                        </li>
-                        <li class="list-group-item list-item">
-                            <p>Department: <span class="badge alert-info">CSE</span>
-                                Semester: <span class="badge alert-success">IV</span><br>
-                                Open from <span class="badge alert-warning">25-jan-2023</span> - <span
-                                    class="badge alert-danger">30-may-2023</span>
-                            </p>
-                        </li>
-                        <li class="list-group-item list-item">
-                            <p>Department: <span class="badge alert-info">CSE</span>
-                                Semester: <span class="badge alert-success">IV</span><br>
-                                Open from <span class="badge alert-warning">25-jan-2023</span> - <span
-                                    class="badge alert-danger">30-may-2023</span>
-                            </p>
-                        </li>
-                        <li class="list-group-item list-item">
-                            <p>Department: <span class="badge alert-info">CSE</span>
-                                Semester: <span class="badge alert-success">IV</span><br>
-                                Open from <span class="badge alert-warning">25-jan-2023</span> - <span
-                                    class="badge alert-danger">30-may-2023</span>
-                            </p>
-                        </li>
-                        <li class="list-group-item list-item">
-                            <p>Department: <span class="badge alert-info">CSE</span>
-                                Semester: <span class="badge alert-success">IV</span><br>
-                                Open from <span class="badge alert-warning">25-jan-2023</span> - <span
-                                    class="badge alert-danger">30-may-2023</span>
-                            </p>
-                        </li>
                     </ul>
                 </div>
             </div>

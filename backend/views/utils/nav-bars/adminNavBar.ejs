@@ -8,7 +8,8 @@
             <i class="fas fa-bars"></i>
         </div>
         <ul class="menu1" style="margin: 0 0; padding: 0;">
-            <li><a href="#" class="<% if( active == 'home'){%>active<%} else {%> <%}%>">Home</a></li>
+            <li><a href="/admin/dashboard" class="<% if( active == 'home'){%>active<%} else {%> <%}%>">Home</a></li>
+            <li><a href="/admin/openRegistration" class="<% if( active == 'registrations'){%>active<%} else {%> <%}%>">Registrations</a></li>
             <li>
                 <form action="/admin/logout" method="POST"><button id="logout-btn">LogOut</button></form>
             </li>

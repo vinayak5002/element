@@ -30,6 +30,8 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="scripts/idlelogout.js"></script> -->
+
 </head>
 
 <style>
@@ -244,7 +246,9 @@
                         <div id="headingOne">{{ courseName }}</div>
                     </div>
                     <select class="form-control" id="{{ target }}">
-                        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                        {{#options}}
+                            <option value="{{.}}">{{.}}</option>
+                        {{/options}}
                     </select>
                 </div>
             </div>
@@ -260,6 +264,10 @@
 
         var courses = JSON.parse('<%- JSON.stringify(courses) %>');
         const coursesCompleted = JSON.parse('<%- JSON.stringify(courseCompleted) %>');   
+        const numElectives = JSON.parse('<%- numElectives %>');
+        const options = Array.from({ length: numElectives }, (_, index) => index + 1);
+        console.log(numElectives);
+
         var filteredCourses = [];   
         var selectedCourses = [];
 
@@ -346,6 +354,7 @@
                 if( course.coursePreRequisites.every(element => coursesCompleted.includes(element)) ){
                     var data = course;
                     data["target"] = "p"+(i+1).toString();
+                    data["options"] = options;
                     var template = $('#selectTile').html();
                     var result = Mustache.render(template, course);
                     targetElement.innerHTML += result;
@@ -358,8 +367,8 @@
         }
 
         function submit(){
-            if( selectedCourses.length != 3 ){
-                alert("Please select exactly 3 couses");
+            if( selectedCourses.length != numElectives ){
+                alert("Please select exactly ${numElectives} couses");
                 return;
             }
 

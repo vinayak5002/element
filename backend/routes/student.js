@@ -111,7 +111,7 @@ router.get("/selectElective", async (req, res) => {
         const deptCourses = await courseModel.find({ dept: req.session.student_dept, sem: req.session.student_sem });
         console.log(req.session.student_coursesCompleted);
 
-        res.render('students/selectElective.ejs', { isRegisOpen: true, courses: deptCourses, courseCompleted: req.session.student_coursesCompleted });
+        res.render('students/selectElective.ejs', { isRegisOpen: true, courses: deptCourses, courseCompleted: req.session.student_coursesCompleted, numElectives: registration.numElectives });
     }
     else{
         res.redirect("/login");
