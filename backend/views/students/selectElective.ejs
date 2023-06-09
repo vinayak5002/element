@@ -182,7 +182,6 @@
         <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #f1f1f1; padding: 20px;">
             <p style="text-align: center;"><%= denyMsg %></p>
           </div>
-          
     <% } %>
 
     <script id="electiveTile" type="text/x-handlebars-template">
@@ -204,7 +203,7 @@
             <div id="{{ target }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class="hidden-content card-body">
                     <div class="hidden-content-row-1">
-                        <p class="m-0"> <span class="badge alert-info">{{ courseType }}-Based Course</span></p>
+                        <p class="m-0"> <span class="badge alert-info">{{ courseType }}-Based Course</span></p>electiveTile
                         <p class="m-0">Credits: <span class="badge alert-danger">{{ courseCredits }}</span></p>
                     </div>
                     <h5 class="bold">Overview:</h5>
@@ -221,7 +220,7 @@
                     {{#unsatisfiedPrerequisites.length}}
                         <p class="not-prereq">
                         {{#unsatisfiedPrerequisites}}
-                            {{.}}{{^isLast}}, {{/isLast}}
+                            {{.}}{{#isLast}}{{else}}, {{/isLast}}
                         {{/unsatisfiedPrerequisites}}
                         </p>
                     {{/unsatisfiedPrerequisites.length}}
@@ -325,9 +324,11 @@
             selectedOptions.each(function (index) {
                 var option = $(this).val();
                 console.log(option);
-                selectedCourses.push( filteredCourses.find(function(obj) {
-                    return obj.courseCode === option.toString();
-                }) );
+                selectedCourses.push(
+                    filteredCourses.find(function(obj) {
+                        return obj.courseCode === option.toString();
+                    })
+                );
             });
 
             console.log(selectedCourses);
