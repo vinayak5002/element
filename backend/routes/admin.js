@@ -111,6 +111,30 @@ router.post("/openRegistration", async (req, res) => {
   res.redirect("/admin/openRegistration");
 });
 
+router.get("/allocation", async (req, res) => {
+  if( req.session.isAdmin ){
+    console.log("Serving allocation page");
+
+    var regis = await openRegistrationModel.find();
+    var modifiedObjects = [];
+    regis.forEach((obj) => {
+      var modifiedObj = {
+        _id: obj._id,
+        dept: obj.dept,
+        sem: obj.sem,
+        startDate: obj.startDate.toDateString().slice(4),
+        endDate: obj.endDate.toDateString().slice(4),
+      };
+
+      modifiedObjects.push(modifiedObj);
+    });
+
+    return res.render("admin/allocation.ejs", {
+      regis: modifiedObjects,
+    });
+  }
+});
+
 router.post("/makeAnnouncement", (req, res) => {
   const { announcement } = req.body;
   const newAnnouncement = new announcementModel({ announcement });
