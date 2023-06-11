@@ -13,6 +13,8 @@ const PswdToken = require("../models/pswdToken");
 const AdminModel = require("../models/admin");
 const announcementModel = require("../models/announcement");
 const openRegistrationModel = require("../models/openRegistrations");
+const courseModel = require("../models/courses");
+const prioritySubmissionModel = require("../models/prioritySubmission");
 
 const store = new MongoDBSession({
   uri: process.env.CONNECTION_STRING,
@@ -39,7 +41,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/dashboard", async (req, res) => {
-  if (req.session.isAuth) {
+  if (req.session.isAdmin) {
     console.log("Serving admin dashboard name = " + req.session.admin_name);
     const announcements = await announcementModel.find();
     console.log(announcements[0].announcement);
@@ -69,7 +71,7 @@ router.get("/dashboard", async (req, res) => {
 });
 
 router.get("/openRegistration", async (req, res) => {
-  if (req.session.isAuth) {
+  if (req.session.isAdmin) {
     console.log("Serving Open registrations page");
 
     var regis = await openRegistrationModel.find();
@@ -116,6 +118,60 @@ router.post("/makeAnnouncement", (req, res) => {
   res.redirect("/admin/dashboard");
 });
 
+router.get("/runAllocationAlgo", async (req, res) => {
+  if(req.session.isAdmin){
+    console.log("Running allocation algo");
+
+    // const { dept, sem } = req.body;
+    const dept = req.query.dept;
+    const sem = parseInt(req.query.sem);
+    console.log("allocation process for dept = " + dept + " sem = " + sem);
+
+    const courses = await courseModel.find({ dept: dept, sem: sem });
+
+    var enrollments = courses.map((course) => ({
+      courseCode: course.courseCode,
+      dept: dept,
+      sem: sem,
+      students: [],
+      seats: course.seats
+    }));
+
+    console.log("Enrollments: ");
+    console.log(enrollments);
+
+    var prioritySubmissions = await prioritySubmissionModel.find({ dept: dept, sem: sem });
+    prioritySubmissions.sort((a, b) => a.createdAt - b.createdAt);
+
+    prioritySubmissions.forEach((submission) => { 
+      priorities = submission.priorities.map((p) => parseInt(p));
+      let selecCourses = submission.courses.map((c) => c);
+
+      var coursePriorityPairs = selecCourses.map((course, index) => ({ course: course, priority: priorities[index] }));
+      coursePriorityPairs.sort((a, b) => a.priority - b.priority);
+
+
+      for (var i = 0; i < coursePriorityPairs.length; i++) {
+        var pair = coursePriorityPairs[i];
+        var course = enrollments.find((enroll) => enroll.courseCode == pair.course);
+      
+        if (course) {
+          if (course.students.length < course.seats) {
+            course.students.push(submission.email);
+            break;
+          }
+        }
+      }
+    });
+
+    console.log("Enrollments: ");
+    console.log(enrollments);
+    res.send(JSON.stringify(enrollments));
+  } else {
+    res.redirect("/login");
+  }
+});
+
 router.post("/login", async (req, res) => {
   console.log(req.body);
   const { email, password, selectedLogo } = req.body;
@@ -134,7 +190,7 @@ router.post("/login", async (req, res) => {
   }
 
   if (user.password === password) {
-    req.session.isAuth = true;
+    req.session.isAdmin = true;
     req.session.admin_name = user.username;
     req.session.admin_email = user.email;
     res.redirect("/admin/dashboard");
