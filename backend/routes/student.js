@@ -83,7 +83,7 @@ router.get("/selectElective", async (req, res) => {
 
         if( submission ){
             console.log("Submission found");
-            res.render("students/selectElective.ejs", { isRegisOpen: false, denyMsg: "You have already submitted your priorities", courses: {}, courseCompleted: []  });
+            res.render("students/selectElective.ejs", { isRegisOpen: false, denyMsg: "You have already submitted your priorities", courses: {}, courseCompleted: [], numElectives: 0  });
             return;
         }
 
@@ -103,7 +103,7 @@ router.get("/selectElective", async (req, res) => {
     
         if( !serve ){
             console.log("Rendering without content");
-            res.render("students/selectElective.ejs", { isRegisOpen: false, denyMsg: "No Registrations open yet", courses: deptCourses, courseCompleted: req.session.student_coursesCompleted });
+            res.render("students/selectElective.ejs", { isRegisOpen: false, denyMsg: "No Registrations open yet", courses: [], courseCompleted: [], numElectives: 0 });
         }
 
         console.log("Department name = " + req.session.student_dept);

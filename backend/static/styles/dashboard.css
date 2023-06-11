@@ -162,7 +162,7 @@ nav.show-menu {
 .list-content {
     width: 80%;
     margin: auto;
-    color: black;
+    border: none;
 }
 
 .dates {

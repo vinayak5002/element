@@ -22,6 +22,8 @@ const prioritySubmissionSchema = new Schema({
         type: Number,
         required: true
     }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model("prioritySubmission", prioritySubmissionSchema);
