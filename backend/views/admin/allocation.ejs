@@ -9,17 +9,29 @@
     <link rel="stylesheet" href="styles/allocation.css">
     <link rel="stylesheet" href="styles/navBar.css">
     <!-- Latest compiled and minified CSS -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+    integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        referrerpolicy="no-referrer" />
+    
+    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
-        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
-        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+    
+    <script src="https://unpkg.com/mustache@latest"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <style>
     body {
@@ -77,37 +89,10 @@
                         </div>
                     </div>
                     </div>
-                    <button type="button" class="btn" id="filterButton">Filter</button>
+                    <button type="button" class="btn" id="filterButton" onclick="filter()">Filter</button>
                 </div>
                 <div class="list-content">
-                    <ul class="list-group">
-                        <li class="list-group-item list-item" style="background-color: rgb(96, 96, 96); color: white; border: 1px solid rgb(96, 96, 96); margin-bottom: 5px; border-radius: 10px;">
-                            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-around;">
-                                <div>
-                                  <p>Course: 
-                                  <span class="badge alert-info">
-                                    CSE101
-                                  </span>
-                                  Enrolled Students:
-                                  <span class="badge alert-success">
-                                    3
-                                  </span>
-                                  Seats:
-                                  <span class="badge alert-warning">
-                                    3
-                                  </span>
-                                  </p>
-                                  <p>
-                                    Students:
-                                  </p>
-                                  <ul class="list-group">
-                                      <li  class="list-group-item list-item" style="background-color: rgb(69, 69, 69); color: white; border: 1px solid rgb(96, 96, 96)">mailvizzard@gmail.com</li>
-                                      <li  class="list-group-item list-item" style="background-color: rgb(69, 69, 69); color: white; border: 1px solid rgb(96, 96, 96)">jondoe@example.com</li>
-                                  </ul>
-                                </div>
-                              </div>      
-                        </li>
-                        
+                    <ul id="enroll-list" class="list-group">
                     </ul>
                 </div>
             </div>
@@ -120,32 +105,83 @@
                 <div>
                     <p>Course: 
                     <span class="badge alert-info">
-                    CSE101
+                    {{ courseCode }}
                     </span>
                     Enrolled Students:
                     <span class="badge alert-success">
-                    3
+                    {{ enrolled }}
                     </span>
                     Seats:
                     <span class="badge alert-warning">
-                    3
+                    {{ seats }}
                     </span>
                     </p>
                     <p>
                     Students:
                     </p>
                     <ul class="list-group">
-                        <li  class="list-group-item list-item" style="background-color: rgb(69, 69, 69); color: white; border: 1px solid rgb(96, 96, 96)">mailvizzard@gmail.com</li>
-                        <li  class="list-group-item list-item" style="background-color: rgb(69, 69, 69); color: white; border: 1px solid rgb(96, 96, 96)">jondoe@example.com</li>
+                        {{ #students }}
+                            <li  class="list-group-item list-item" style="background-color: rgb(69, 69, 69); color: white; border: 1px solid rgb(96, 96, 96)">{{ . }}</li>
+                        {{ /students }}
                     </ul>
                 </div>
-                </div>      
+            </div>      
         </li>
     </script>
 
     <script>
+
+        var enrollments = JSON.parse('<%- JSON.stringify(enrollments) %>');
+        console.log(enrollments);
+
+        function filter() {
+            console.log("Filtering");
+            const dept = document.getElementById("dept").value;
+            const sem = document.getElementById("sem").value;
+
+            function satisfies(dpt, sm){
+                return dept == dpt && sem == sm;
+            }
+
+            const enrollList = document.getElementById("enroll-list");
+            enrollList.innerHTML = '';
+
+            for(let i=0; i<enrollments.length; i++){
+                if(satisfies(enrollments[i].dept, enrollments[i].sem)){
+                    const enrollTile = document.getElementById("enrollTile").innerHTML;
+                    console.log(enrollments[i]);
+                    // enrollList.innerHTML += enrollTile;
+                    enrollments[i]['enrolled'] = enrollments[i]['students'].length;
+                    var result = Mustache.render(enrollTile, enrollments[i]);
+                    enrollList.innerHTML += result;
+                }
+            }
+        }
+
         function startAllocationAlgo(dept, sem){
             console.log("Starting allocation algo for " + dept + " " + sem);
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ dept: dept, sem: parseInt(sem) })
+            };
+
+            fetch('http://localhost:5002/admin/runAllocationAlgo', requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    console.log("Electives submitted successfully");
+                    window.location.href = "/admin/allocation";
+                } else {
+                    throw new Error("Failed to submit electives");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle any errors that occurred during the request
+            });
+
         }
     </script>
 

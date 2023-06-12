@@ -15,6 +15,7 @@ const announcementModel = require("../models/announcement");
 const openRegistrationModel = require("../models/openRegistrations");
 const courseModel = require("../models/courses");
 const prioritySubmissionModel = require("../models/prioritySubmission");
+const enrollmentModel = require("../models/enrollments");
 
 const store = new MongoDBSession({
   uri: process.env.CONNECTION_STRING,
@@ -115,6 +116,8 @@ router.get("/allocation", async (req, res) => {
   if( req.session.isAdmin ){
     console.log("Serving allocation page");
 
+    var enrollments = await enrollmentModel.find();
+
     var regis = await openRegistrationModel.find();
     var modifiedObjects = [];
     regis.forEach((obj) => {
@@ -131,6 +134,7 @@ router.get("/allocation", async (req, res) => {
 
     return res.render("admin/allocation.ejs", {
       regis: modifiedObjects,
+      enrollments: enrollments
     });
   }
 });
@@ -142,13 +146,13 @@ router.post("/makeAnnouncement", (req, res) => {
   res.redirect("/admin/dashboard");
 });
 
-router.get("/runAllocationAlgo", async (req, res) => {
+router.post("/runAllocationAlgo", async (req, res) => {
   if(req.session.isAdmin){
     console.log("Running allocation algo");
 
-    // const { dept, sem } = req.body;
-    const dept = req.query.dept;
-    const sem = parseInt(req.query.sem);
+    const { dept, sem } = req.body;
+    // const dept = req.query.dept;
+    // const sem = parseInt(req.query.sem);
     console.log("allocation process for dept = " + dept + " sem = " + sem);
 
     const courses = await courseModel.find({ dept: dept, sem: sem });
@@ -190,7 +194,20 @@ router.get("/runAllocationAlgo", async (req, res) => {
 
     console.log("Enrollments: ");
     console.log(enrollments);
-    res.send(JSON.stringify(enrollments));
+
+    enrollmentModel.insertMany(enrollments)
+    .then((result) => {
+      console.log(`${result.length} documents inserted`);
+    })
+    .catch((err) => {
+      console.error('Error inserting documents:', err);
+    });
+
+    const regis = await openRegistrationModel.deleteOne({dept: dept, sem: sem});
+    console.log("Found regis");
+    console.log(regis);
+    
+    res.send('ok');
   } else {
     res.redirect("/login");
   }
