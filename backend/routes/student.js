@@ -15,6 +15,8 @@ const announcementModel = require("../models/announcement");
 const openRegistrationModel = require("../models/openRegistrations");
 const courseModel = require("../models/courses");
 const prioritySubmissionModel = require("../models/prioritySubmission");
+const enrollmentModel = require("../models/enrollments");
+const changeElectiveRequestModel = require("../models/changeElectiveRequest");
 
 const store = new MongoDBSession({
     uri: process.env.CONNECTION_STRING,
@@ -149,6 +151,93 @@ router.post("/submitPriorities", async (req, res) => {
     console.log("Inserted into prioritySubmission collection");
 
     res.redirect("/student/selectElective");
+});
+
+router.get("/changeElective", async (req, res) => {
+    console.log("Serving changeElective");
+    
+    const denyMsg = {
+        'pending': "Request is pending",
+        'accepted': "Request accepted",
+        'rejected': "Request rejected"
+    }
+
+    const request = await changeElectiveRequestModel.findOne({ email: req.session.student_email });
+    const enrollment = await enrollmentModel.find({ dept: req.session.student_dept, sem: req.session.student_sem });
+    
+    const coursesEnrolled = enrollment.filter(function(item) {
+        return item.students.includes(req.session.student_email);
+    });    
+    const enrolledCourseCodes = coursesEnrolled.map(item => item.courseCode);
+
+    const enrolledCourses = await courseModel.find({ courseCode: { $in: enrolledCourseCodes }, dept: req.session.student_dept, sem: req.session.student_sem  });
+    
+    if (request) {
+
+        res.render("students/changeElective.ejs", {
+            enrolledCourses: enrolledCourses,
+            unenrolledCourses: [],
+            courseCompleted: [],
+            isOpen: false,
+            denyMsg: denyMsg[request.status]
+        });
+
+    } else {
+
+        const availableCourses = enrollment.filter(function(item) {
+            return !item.students.includes(req.session.student_email);
+        });
+        
+        const seatsLeft = availableCourses.map(function (item) {
+            return { code: item.courseCode, seatsLeft: item.seats - item.students.length }
+        });
+        
+        const unenrolledCourseCodes = availableCourses.map(item => item.courseCode);
+        
+        const unenrolledCourses = await courseModel.find({ courseCode: { $in: unenrolledCourseCodes }, dept: req.session.student_dept, sem: req.session.student_sem });
+        
+        const unenrolledCoursesWithSeats = unenrolledCourses.map((course) => {
+            const seats = seatsLeft.find((item) => item.code == course.courseCode);
+            return { ...course.toObject(), seatsLeft: seats ? seats.seatsLeft : course.seats };
+        });
+        
+        // console.log(availableCourses);
+        // console.log(seatsLeft);
+        // console.log(enrolledCourseCodes);
+        // console.log(unenrolledCourseCodes);
+        // console.log(enrolledCourses);
+        // console.log(unenrolledCoursesWithSeats);
+        
+        res.render("students/changeElective.ejs", {
+            enrolledCourses: enrolledCourses,
+            unenrolledCourses: unenrolledCoursesWithSeats,
+            courseCompleted: req.session.student_coursesCompleted,
+            isOpen: true
+        });
+    }
+
+});
+
+router.post("/changeElective", async (req, res) => {
+    console.log("POST");
+    console.log(req.body);
+    const body = req.body;
+
+    const studentEmail = req.session.student_email;
+    const studentDept = req.session.student_dept;
+    const studentSem = req.session.student_sem;
+
+    const changeElec = new changeElectiveRequestModel({
+        email: studentEmail,
+        courseCode: body.selectedCourses[0],
+        dept: studentDept,
+        sem: studentSem,
+        status: 'pending'
+    });
+
+    await changeElec.save();
+
+    res.redirect("/student/changeElective");
 });
 
 module.exports = router;
