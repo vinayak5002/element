@@ -16,6 +16,7 @@ const openRegistrationModel = require("../models/openRegistrations");
 const courseModel = require("../models/courses");
 const prioritySubmissionModel = require("../models/prioritySubmission");
 const enrollmentModel = require("../models/enrollments");
+const changeElectiveRequestModel = require("../models/changeElectiveRequest");
 
 const store = new MongoDBSession({
   uri: process.env.CONNECTION_STRING,
@@ -243,6 +244,15 @@ router.post("/login", async (req, res) => {
     });
   }
 });
+
+router.get("/changeElective", async (req, res) => {
+
+  const requests = await changeElectiveRequestModel.find();
+
+  res.render("admin/changeElec.ejs", {
+    changes: requests
+  });
+})
 
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
