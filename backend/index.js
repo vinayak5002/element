@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const dotenv = require('dotenv');
-var nodemailer = require('nodemailer');
+let nodemailer = require('nodemailer');
 const db = require('./db');
 const MongoDBSession = require('connect-mongodb-session')(session);
 
@@ -53,7 +53,7 @@ app.use('/scripts', express.static('static/scripts'));
 app.use('/images', express.static('static/images'));
 
 app.get('/', (req, res) => {
-  // res.send("Yokoso");
+
   res.redirect("/login");
 });
 
@@ -139,7 +139,7 @@ app.post('/forgotPassword', async (req, res) => {
 
   const link = 'http://localhost:5002/resetPassword?email=' + email + '&token=' + str;
   
-  var mailOptions = {
+  let mailOptions = {
     from: 'mailvizzard@gmail.com',
     to: email,
     subject: 'Element password reset',
@@ -160,26 +160,29 @@ app.post('/forgotPassword', async (req, res) => {
   
   const args = [email, "Element password reset", link];
   
-  const pythonProcess = spawn('python', [pythonScript, ...args]);
+  const allowedScripts = ['./send_password_reset.py']; // Whitelist of allowed scripts
 
-  pythonProcess.stdout.on('data', (data) => {
-    console.log(`Python script output: ${data}`);
-  });
-  
-  pythonProcess.stderr.on('data', (data) => {
-    console.error(`Error executing Python script: ${data}`);
-  });
-  
-  pythonProcess.on('close', (code) => {
-    console.log(`Python script executed with code ${code}`);
-  });
+  if (allowedScripts.includes(pythonScript)) {
+    const pythonProcess = spawn('python', [pythonScript, ...args]);
+    pythonProcess.stdout.on('data', (data) => {
+      console.log(`Python script output: ${data}`);
+    });
+    
+    pythonProcess.stderr.on('data', (data) => {
+      console.error(`Error executing Python script: ${data}`);
+    });
+    
+    pythonProcess.on('close', (code) => {
+      console.log(`Python script executed with code ${code}`);
+    });
+  }
 
   res.render('login.ejs', { isWarned: true, warnignMessage: "Try loging in again after resetting password" });
 });
 
 app.get('/resetPassword', async (req, res) => {
-  // const { email, token } = req.query;
-  const email = req.query.email;
+
+
   const token = req.query.token;
 
   const result = await PswdToken.findOne({ token: token });
@@ -190,7 +193,7 @@ app.get('/resetPassword', async (req, res) => {
   else {
     res.send("Something wrong occurred");
   }
-  // res.send("wtf is this?");
+
 });
 
 app.post('/resetPassword', async (req, res) => {
