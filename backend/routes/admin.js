@@ -192,6 +192,12 @@ router.post("/runAllocationAlgo", async (req, res) => {
       }      
     });
 
+    console.log("courses");
+    console.log(courses);
+    console.log("Priority submissions: ");
+    console.log(prioritySubmissions);
+    
+
     console.log("Enrollments: ");
     console.log(enrollments);
 
