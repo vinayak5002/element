@@ -2,6 +2,9 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import sys
+from dotenv.main import load_dotenv
+import os
+
 
 n = len(sys.argv)
 
@@ -38,7 +41,8 @@ def send_email(sender_email, sender_password, recipient_email, subject, message)
 
 # Get user input
 sender_email = "elementreset@outlook.com"
-sender_password = "Vinayak is the goat"
+load_dotenv()
+sender_password = os.environ['SENDER_PASSWORD']
 recipient_email = sys.argv[1]
 subject = sys.argv[2]
 message = sys.argv[3]
